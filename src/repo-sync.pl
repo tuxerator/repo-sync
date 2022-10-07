@@ -4,6 +4,8 @@ use warnings;
 use feature 'signatures';
 use File::Find;
 
+$/ = undef;
+
 my @repos = ();
 my $stash_name_format = "[branch]-[name]";
 
