@@ -7,7 +7,7 @@ use File::Find;
 $, = "\n";
 
 my @repos = ();
-my $stash_name_format = "[branch]_[name]";
+my $stash_name_format = "[branch]-[name]";
 
 # Find all repos in home
 sub wanted {
