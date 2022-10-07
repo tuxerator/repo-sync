@@ -4,8 +4,6 @@ use warnings;
 use feature 'signatures';
 use File::Find;
 
-$, = "\n";
-
 my @repos = ();
 my $stash_name_format = "[branch]-[name]";
 
@@ -22,7 +20,9 @@ sub wanted {
 }
 find(\&wanted, ("/home/jakob/repos"));
 print "Repos found:\n";
+$, = "\n";
 print "@repos\n\n";
+$, = "";
 
 # Push every repo to remote
 foreach my $repo (@repos) {
