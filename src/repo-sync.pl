@@ -21,9 +21,8 @@ sub wanted {
 find(\&wanted, ("/home/jakob/repos"));
 print "Repos found:\n";
 $, = "\n";
-print "@repos\n\n";
-$, = "";
-$/ = "";
+print "@repos";
+$, = undef;
 
 # Push every repo to remote
 foreach my $repo (@repos) {
