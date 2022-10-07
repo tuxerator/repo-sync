@@ -35,11 +35,11 @@ foreach my $repo (@repos) {
   my $commit_message = `git show --format=%s --no-patch`;
   my $branch = `git branch --show-current`;
   my $user = lc(`git config --get user.name`);
-  $user =~ s/\s/_/;
+  $user =~ s/\s/-/;
 
   my $stash_name;
 
-  if ($branch =~ m/^stash.$branch-$user/) {
+  if ($branch =~ m/^stash-$branch-$user/) {
     # If current branch is already a stash just create a new commit and push
     $stash_name = $branch;
   }
@@ -64,7 +64,7 @@ foreach my $repo (@repos) {
 #Create stash name after the given format
 sub parse_stash_name ($stash_name_format, $user, $branch) {
   print "$user, $branch";
-  my $stash_name = "stash.$stash_name_format";
+  my $stash_name = "stash-$stash_name_format";
   $stash_name =~ s/\[name\]/$user/;
   $stash_name =~ s/\[branch\]/$branch/;
   return $stash_name;
