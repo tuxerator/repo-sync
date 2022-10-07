@@ -5,7 +5,6 @@ use feature 'signatures';
 use File::Find;
 
 $, = "\n";
-$\ = "\n";
 
 my @repos = ();
 my $stash_name_format = "[branch]-[name]";
@@ -22,12 +21,12 @@ sub wanted {
   }
 }
 find(\&wanted, ("/home/jakob/"));
-print "Repos found:";
-print @repos;
+print "Repos found:\n";
+print "@repos\n\n";
 
 # Push every repo to remote
 foreach my $repo (@repos) {
-  print "Syncing stash of $repo";
+  print "Syncing stash of $repo\n";
   # Check if repo has a remote
   unless (`git remote -v` =~ m/push/) {
     die "$repo has no remote to push to!"
@@ -48,16 +47,16 @@ foreach my $repo (@repos) {
     # If current branch isn't a stash create a new one
     $stash_name = parse_stash_name($stash_name_format, $user, $branch);
 
-    print "Creating stash for $branch...";
+    print "Creating stash $stash_name for $branch...\n";
     system("git", "branch", $stash_name);
   }
     
-  print "Creating new commit...";
+  print "Creating new commit...\n";
   system("git", "add", "--all");
   system("git", "commit", "-m", "stash: sync current working-tree with remote") == 0 
     or die "Commit to $stash_name failed with: $?";
 
-  print "Pushing to remote...";
+  print "Pushing to remote...\n";
   system("git", "push") == 0
     or die "Push to remote failed with: $?";
 }
