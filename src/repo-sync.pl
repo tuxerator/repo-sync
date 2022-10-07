@@ -23,7 +23,7 @@ print "Repos found:\n";
 $, = "\n";
 print "@repos\n\n";
 $, = "";
-$\ = "";
+$/ = "";
 
 # Push every repo to remote
 foreach my $repo (@repos) {
