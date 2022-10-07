@@ -7,7 +7,7 @@ use File::Find;
 $, = "\n";
 
 my @repos = ();
-my $stash_name_format = "[branch]-[name]";
+my $stash_name_format = "[branch]_[name]";
 
 # Find all repos in home
 sub wanted {
@@ -20,7 +20,7 @@ sub wanted {
     $File::Find::prune = 1;
   }
 }
-find(\&wanted, ("/home/jakob/"));
+find(\&wanted, ("/home/jakob/repos"));
 print "Repos found:\n";
 print "@repos\n\n";
 
@@ -48,7 +48,7 @@ foreach my $repo (@repos) {
     $stash_name = parse_stash_name($stash_name_format, $user, $branch);
 
     print "Creating stash $stash_name for $branch...\n";
-    system("git", "branch", $stash_name);
+    system("git", "switch", ,"-c", $stash_name);
   }
     
   print "Creating new commit...\n";
@@ -63,7 +63,9 @@ foreach my $repo (@repos) {
 
 #Create stash name after the given format
 sub parse_stash_name ($stash_name_format, $user, $branch) {
+  print "$user, $branch";
   my $stash_name = "stash:$stash_name_format";
   $stash_name =~ s/\[name\]/$user/;
   $stash_name =~ s/\[branch\]/$branch/;
+  return $stash_name;
 }
