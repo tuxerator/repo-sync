@@ -27,6 +27,7 @@ print @repos;
 
 # Push every repo to remote
 foreach my $repo (@repos) {
+  print "Syncing stash of $repo";
   # Check if repo has a remote
   unless (`git remote -v` =~ m/push/) {
     die "$repo has no remote to push to!"
@@ -63,7 +64,7 @@ foreach my $repo (@repos) {
 
 #Create stash name after the given format
 sub parse_stash_name ($stash_name_format, $user, $branch) {
-  my $stash_name = "stash:";
+  my $stash_name = "stash:$stash_name_format";
   $stash_name =~ s/\[name\]/$user/;
   $stash_name =~ s/\[branch\]/$branch/;
 }
