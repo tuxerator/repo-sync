@@ -1,10 +1,11 @@
 #!/bin/perl
 use strict;
 use warnings;
+use Env qw(HOME);
 use feature 'signatures';
 use File::Find;
 
-$/ = undef;
+$/ = '';
 
 my @repos = ();
 my $stash_name_format = "[branch]-[name]";
@@ -20,15 +21,17 @@ sub wanted {
     $File::Find::prune = 1;
   }
 }
-find(\&wanted, ("/home/jakob/repos"));
+find(\&wanted, ("$HOME/repos"));
 print "Repos found:\n";
 $, = "\n";
-print "@repos";
+print "@repos\n";
 $, = undef;
 
 # Push every repo to remote
 foreach my $repo (@repos) {
   print "Syncing stash of $repo\n";
+  chdir $repo;
+
   # Check if repo has a remote
   unless (`git remote -v` =~ m/push/) {
     die "$repo has no remote to push to!"
@@ -36,12 +39,14 @@ foreach my $repo (@repos) {
 
   my $commit_message = `git show --format=%s --no-patch`;
   my $branch = `git branch --show-current`;
+  chomp($branch);
   my $user = lc(`git config --get user.name`);
+  chomp($user);
   $user =~ s/\s/-/;
 
   my $stash_name;
 
-  if ($branch =~ m/^stash-$branch-$user/) {
+  if ($branch =~ m/stash-/) {
     # If current branch is already a stash just create a new commit and push
     $stash_name = $branch;
   }
@@ -55,17 +60,16 @@ foreach my $repo (@repos) {
     
   print "Creating new commit...\n";
   system("git", "add", "--all");
-  system("git", "commit", "-m", "stash: sync current working-tree with remote") == 0 
-    or die "Commit to $stash_name failed with: $?";
+  system("git", "commit", "-m", "stash!") == 0 
+    or warn "Commit to $stash_name failed with: $?";
 
   print "Pushing to remote...\n";
-  system("git", "push") == 0
+  system("git", "push", "--set-upstream", "origin", $stash_name) == 0
     or die "Push to remote failed with: $?";
 }
 
 #Create stash name after the given format
 sub parse_stash_name ($stash_name_format, $user, $branch) {
-  print "$user, $branch";
   my $stash_name = "stash-$stash_name_format";
   $stash_name =~ s/\[name\]/$user/;
   $stash_name =~ s/\[branch\]/$branch/;
