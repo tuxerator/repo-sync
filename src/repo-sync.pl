@@ -56,16 +56,17 @@ foreach my $repo (@repos) {
     my $status = `git status --porcelain=v2`;
     chomp($status);
     print $status;
-    if ($status eq "") {
+
+    unless ($status eq "") {
       print "No new changes.";
-      return;
     }
+    else {
+      # If current branch isn't a stash create a new one
+      $stash_name = parse_stash_name($stash_name_format, $user, $branch);
 
-    # If current branch isn't a stash create a new one
-    $stash_name = parse_stash_name($stash_name_format, $user, $branch);
-
-    print "Creating stash $stash_name for $branch...\n";
-    system("git", "switch", ,"-c", $stash_name);
+      print "Creating stash $stash_name for $branch...\n";
+      system("git", "switch", ,"-c", $stash_name);
+    }
   }
     
   print "Creating new commit...\n";
