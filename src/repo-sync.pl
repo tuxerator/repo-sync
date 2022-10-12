@@ -53,6 +53,11 @@ foreach my $repo (@repos) {
     $stash_name = $branch;
   }
   else {
+    if (`git status --porcelain=v2` == '') {
+      print "No new changes.";
+      return;
+    }
+
     # If current branch isn't a stash create a new one
     $stash_name = parse_stash_name($stash_name_format, $user, $branch);
 
