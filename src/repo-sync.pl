@@ -36,7 +36,7 @@ foreach my $repo (@repos) {
   unless (`git remote -v` =~ m/push/) {
     warn "$repo has no remote to push to!"
   }
-  print '\n';
+  print "\n";
 
   my $commit_message = `git show --format=%s --no-patch`;
   my $branch = `git branch --show-current`;
@@ -67,7 +67,7 @@ foreach my $repo (@repos) {
       print "Creating stash $stash_name for $branch...\n";
       system("git", "switch", ,"-c", $stash_name);
     }
-    print '\n';
+    print "\n";
   }
     
   print "Creating new commit...\n";
@@ -77,7 +77,7 @@ foreach my $repo (@repos) {
 
   print "Pushing to remote...\n";
   system("git", "push", "--set-upstream", "origin", $stash_name);
-  print '\n';
+  print "\n";
 }
 
 #Create stash name after the given format
