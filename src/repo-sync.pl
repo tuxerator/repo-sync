@@ -73,7 +73,7 @@ foreach my $repo (@repos) {
   print "Creating new commit...\n";
   system("git", "add", "--all");
   system("git", "commit", "-m", "stash!");
-  print '\n';
+  print "\n";
 
   print "Pushing to remote...\n";
   system("git", "push", "--set-upstream", "origin", $stash_name);
