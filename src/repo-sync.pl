@@ -56,7 +56,7 @@ foreach my $repo (@repos) {
     my $status = `git status --porcelain=v2`;
     chomp($status);
     print $status;
-    if ($status == '') {
+    if ($status eq "") {
       print "No new changes.";
       return;
     }
