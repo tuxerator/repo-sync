@@ -53,7 +53,10 @@ foreach my $repo (@repos) {
     $stash_name = $branch;
   }
   else {
-    if (`git status --porcelain=v2` == '') {
+    my $status = `git status --porcelain=v2`;
+    chomp($status);
+    print $status;
+    if ($status == '') {
       print "No new changes.";
       return;
     }
