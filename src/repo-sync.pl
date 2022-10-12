@@ -42,9 +42,7 @@ foreach my $repo (@repos) {
   chomp($branch);
   my $user = lc(`git config --get user.name`);
   chomp($user);
-  print $user;
   $user =~ s/\s/-/;
-  print $user;
 
   my $stash_name;
 
@@ -58,7 +56,8 @@ foreach my $repo (@repos) {
     print $status;
 
     if ($status eq "") {
-      print "No new changes.";
+      print "No new changes.\n";
+      $stash_name = $branch;
     }
     else {
       # If current branch isn't a stash create a new one
@@ -72,11 +71,11 @@ foreach my $repo (@repos) {
   print "Creating new commit...\n";
   system("git", "add", "--all");
   system("git", "commit", "-m", "stash!") == 0 
-    or warn "Commit to $stash_name failed with: $?";
+    or warn "Commit to $stash_name failed with: $?\n";
 
   print "Pushing to remote...\n";
   system("git", "push", "--set-upstream", "origin", $stash_name) == 0
-    or die "Push to remote failed with: $?";
+    or warn "Push to remote failed with: $?\n";
 }
 
 #Create stash name after the given format
