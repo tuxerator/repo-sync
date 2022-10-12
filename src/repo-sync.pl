@@ -57,7 +57,7 @@ foreach my $repo (@repos) {
     chomp($status);
     print $status;
 
-    unless ($status eq "") {
+    if ($status eq "") {
       print "No new changes.";
     }
     else {
